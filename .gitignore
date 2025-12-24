@@ -22,3 +22,10 @@ logs
 .env
 .env.*
 !.env.example
+
+/app/generated/prisma
+
+/lib/generated/prisma
+
+# database
+dev.db
