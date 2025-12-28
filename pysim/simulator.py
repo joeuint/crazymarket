@@ -21,6 +21,10 @@ class Stock():
 
         self.write_to_disk = write_to_disk
 
+        if self.write_to_disk:
+            with open(f"{self.name}_price.txt", "w") as f:
+                f.write(f"{self.price}\n")
+
     def determine_trend(self):
         change_trend = random.randint(0, 5) == 0
 
@@ -29,14 +33,14 @@ class Stock():
             print(f"Changing market trend to {self.trend.name}.")
 
     def crash_market(self):
-        crash_amount = math.floor((random.randint(10, 50) / 100.0) * self.price)
+        crash_amount = math.floor((random.randint(10, 50) / 100.0) * max(1, self.price))
         self.price -= crash_amount
         print(f"Crash! {self.name} drops by {crash_amount} cents to {self.price} cents.")
 
         self.crash_risk = 0
 
     def surge_market(self):
-        surge_amount = math.floor((random.randint(50, 100) / 100.0) * self.price)
+        surge_amount = math.floor((random.randint(50, 100) / 100.0) * max(1, self.price))
         self.price += surge_amount
         print(f"Surge! {self.name} rises by {surge_amount} cents to {self.price} cents.")
 
@@ -75,6 +79,8 @@ class Stock():
         self.determine_trend()
         change = random.randint(*self.trend.value)
         self.price += change
+
+        self.price = max(0, self.price)
 
         if self.write_to_disk:
             with open(f"{self.name}_price.txt", "a") as f:
