@@ -16,14 +16,36 @@ datasource db {
 model User {
   id                String             @id @default(uuid())
   username          String             @unique
-  githubConnections GithubConnection[]
+  githubConnections GithubConnection?
+  userSessions      UserSession[]
+  profile           Profile?
 }
 
 model GithubConnection {
-  id       String @id @default(uuid())
-  userId   String
+  id     String @id @default(uuid())
+  userId String @unique
 
   githubId String @unique
 
-  user     User   @relation(fields: [userId], references: [id])
+  user User @relation(fields: [userId], references: [id])
+}
+
+model UserSession {
+  id        String   @id @default(uuid())
+  userId    String
+  createdAt DateTime @default(now())
+  token     String   @unique
+
+  user User @relation(fields: [userId], references: [id])
+}
+
+model Profile {
+  id     String @id @default(uuid())
+  userId String @unique
+
+  displayName String?
+  bio         String?
+  avatarUrl   String?
+
+  user User @relation(fields: [userId], references: [id])
 }
