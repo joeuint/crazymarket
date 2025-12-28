@@ -2,7 +2,6 @@
 
 import time
 import threading
-import logging
 from typing import Any, Callable
 
 class PeriodicTask:
@@ -25,6 +24,5 @@ class Scheduler:
             if current_time >= task.nextRun:
                 thread = threading.Thread(target=task.callback)
                 thread.start()
-                logging.debug(f"Started task {task.callback.__name__}.")
 
                 task.nextRun = current_time + task.interval
