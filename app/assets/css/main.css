@@ -1,6 +1,6 @@
-@import "tailwindcss";
-@import "@nuxt/ui";
+@import 'tailwindcss';
+@import '@nuxt/ui';
 
 .reglink {
-  @apply text-primary-600 underline hover:text-primary-400;
+    @apply text-primary-600 underline hover:text-primary-400;
 }

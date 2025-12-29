@@ -1,11 +1,11 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
-  compatibilityDate: "2025-07-15",
-  devtools: { enabled: true },
-  modules: ["@nuxt/ui", "nuxt-charts"],
-  css: ["~/assets/css/main.css"],
-  runtimeConfig: {
-    githubClientId: "",
-    githubClientSecret: "",
-  },
+    compatibilityDate: '2025-07-15',
+    devtools: { enabled: true },
+    modules: ['@nuxt/ui', 'nuxt-charts'],
+    css: ['~/assets/css/main.css'],
+    runtimeConfig: {
+        githubClientId: '',
+        githubClientSecret: '',
+    },
 });

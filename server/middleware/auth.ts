@@ -1,16 +1,15 @@
 export default defineEventHandler(async (event) => {
-  const session = getCookie(event, "session_token");
+    const session = getCookie(event, 'session_token');
 
-  if (!session) {
-    return;
-  }
+    if (!session) {
+        return;
+    }
 
-  event.context.user = (await auth.getUserBySessionToken(session)) ?? undefined;
+    event.context.user = (await auth.getUserBySessionToken(session)) ?? undefined;
 
-  if (!event.context.user) {
-    return;
-  }
+    if (!event.context.user) {
+        return;
+    }
 
-  event.context.profile =
-    (await auth.getProfileByUser(event.context.user)) ?? undefined;
+    event.context.profile = (await auth.getProfileByUser(event.context.user)) ?? undefined;
 });
