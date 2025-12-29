@@ -58,4 +58,10 @@ export const market = {
 
         return null;
     },
+
+    getAllStockMetadata(): StockMetadata[] {
+        const rows = db.prepare('SELECT stock_ticker, stock_name, biography FROM stocks_meta').all();
+
+        return rows.filter(this.isStockMetadata);
+    },
 };
