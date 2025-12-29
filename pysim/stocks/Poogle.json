@@ -1,0 +1,7 @@
+{
+    "$schema": "./company.schema.json",
+    "ticker": "POG",
+    "company_name": "Poogle",
+    "biography": "We are Poogle. We started off by creating a product that people love. The whole world uses. Our motto was, \"Don't be evil\". But that was the past lol. Our motto is now now \"Don't be evil unless it makes hella cash\". We strive to be a company that shareholders love and the average person hates. That's basically every company but we want to be the worst. We sell all of our customers data for a huge profit so other evil companies can advertise to them. Isn't that great? In fact, we've replaced our dividends with the full information and identity of random people who never consented to it. One stock = one person's data. We aren't all bad though. We also fund our competition ~so we don't get sued for anti-trust~ out of the goodness of our own hearts.",
+    "ipo": 123030
+}

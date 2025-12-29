@@ -1,0 +1,24 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "title": "CrazyMarket Company",
+    "type": "object",
+    "properties": {
+        "ticker": {
+            "type": "string",
+            "description": "The stock ticker symbol for the company."
+        },
+        "company_name": {
+            "type": "string",
+            "description": "The full name of the company."
+        },
+        "biography": {
+            "type": "string",
+            "description": "A brief biography or description of the company."
+        },
+        "ipo": {
+            "type": "integer",
+            "description": "Opening Price in cents"
+        }
+    },
+    "required": ["ticker", "company_name", "biography", "ipo"]
+}

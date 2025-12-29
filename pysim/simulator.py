@@ -1,12 +1,36 @@
+from dataclasses import dataclass
 import enum
 import math
 import random
+import sqlite3
 import threading
+from time import time
 import events
+import json
+import pathlib
+
 
 STAGNANT_MAX_CHANGE = 5
 STAGNANT_MIN_CHANGE = -5
 
+@dataclass
+class StockMeta:
+    @staticmethod
+    def from_json_file(path: pathlib.Path) -> "StockMeta":
+        with open(path, "r") as f:
+            data = json.load(f)
+
+        return StockMeta(
+            stock_ticker=data["ticker"],
+            stock_name=data["company_name"],
+            biography=data["biography"],
+            ipo=data["ipo"]
+        )
+
+    stock_ticker: str
+    stock_name: str
+    biography: str
+    ipo: int
 
 class MarketTrend(enum.Enum):
     BULL = (10, 40)
@@ -15,10 +39,11 @@ class MarketTrend(enum.Enum):
 
 
 class Stock:
-    def __init__(self, name: str, price: int, *, write_to_disk: bool = False):
-        self.name = name
-        self.price = price
-        self.ipo = price
+    def __init__(self, meta: StockMeta, *, write_to_disk: bool = False):
+        self.name = meta.stock_name
+        self.price = meta.ipo
+        self.ipo = meta.ipo
+        self.meta = meta
         self.trend = MarketTrend.STAGNANT
         self.surge_risk = 3  # percentage
         self.crash_risk = 3  # percentage
@@ -120,3 +145,32 @@ class Stock:
 
         with self.mutex:
             print("Something should happen!")
+
+class Market:
+    def __init__(self,  stocks: list[Stock] = []):
+        self.stocks = stocks
+
+    def simulate(self):
+        conn = sqlite3.connect("../market.db")
+        cur = conn.cursor()
+
+        cur.execute("""
+        CREATE TABLE IF NOT EXISTS market_data (
+            stock_name TEXT,
+            price_cents INTEGER,
+            timestamp INTEGER
+        )
+        """)
+
+        for stock in self.stocks:
+            stock.simulate()
+
+            cur.execute(
+                "INSERT INTO market_data (stock_name, price_cents, timestamp) VALUES (?, ?, ?)",
+                (stock.name, stock.price, int(time()))
+            )
+
+        conn.commit()
+        conn.close()
+        
+        # write market simulation to db
