@@ -2,6 +2,6 @@
     "$schema": "company.schema.json",
     "ticker": "BNAN",
     "company_name": "Banana Corp.",
-    "biography": "Banana is the leading provider of technology. It's named after a fruit so what can go wrong. They create consumer electronics such as the WePhone, WeBook, and the WeMac. We make roducts with the highest price. No one can compete with our incredibly high prices. The best part, people still buy it. So join us in cutting costs while raising prices to the moon.",
+    "biography": "Banana is the leading provider of technology. It's named after a fruit so what can go wrong. They create consumer electronics such as the WePhone, WeBook, and the WeMac. We make products with the highest price. No one can compete with our incredibly high prices. The best part, people still buy it. So join us in cutting costs while raising prices to the moon.",
     "ipo": 50000
 }
