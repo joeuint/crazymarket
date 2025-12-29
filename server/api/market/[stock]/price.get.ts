@@ -1,11 +1,11 @@
 export default defineEventHandler(async (event) => {
-    const stock = getRouterParam(event, "stock");
-    console.log(stock)
+    const stock = getRouterParam(event, 'stock')?.toUpperCase();
+    console.log(stock);
 
-    if (typeof stock !== "string") {
+    if (typeof stock !== 'string') {
         throw createError({
             statusCode: 400,
-            statusMessage: "Invalid stock parameter",
+            statusMessage: 'Invalid stock parameter',
         });
     }
 
@@ -14,7 +14,7 @@ export default defineEventHandler(async (event) => {
     if (dataEntry === null) {
         throw createError({
             statusCode: 404,
-            statusMessage: "Stock not found",
+            statusMessage: 'Stock not found',
         });
     }
 
