@@ -7,7 +7,9 @@
         "dev": "nuxt dev",
         "generate": "nuxt generate",
         "preview": "nuxt preview",
-        "postinstall": "nuxt prepare"
+        "postinstall": "nuxt prepare",
+        "prepare": "husky",
+        "format": "prettier --write ."
     },
     "dependencies": {
         "@iconify-json/fluent": "^1.2.36",
@@ -27,6 +29,7 @@
     "devDependencies": {
         "@types/pg": "^8.16.0",
         "dotenv": "^17.2.3",
+        "husky": "^9.1.7",
         "prettier": "3.7.4",
         "prisma": "^7.2.0",
         "tsx": "^4.21.0"
