@@ -154,20 +154,12 @@ class Market:
         conn = sqlite3.connect("../market.db")
         cur = conn.cursor()
 
-        cur.execute("""
-        CREATE TABLE IF NOT EXISTS market_data (
-            stock_name TEXT,
-            price_cents INTEGER,
-            timestamp INTEGER
-        )
-        """)
-
         for stock in self.stocks:
             stock.simulate()
 
             cur.execute(
-                "INSERT INTO market_data (stock_name, price_cents, timestamp) VALUES (?, ?, ?)",
-                (stock.name, stock.price, int(time()))
+                "INSERT INTO market_data (stock_ticker, price_cents, timestamp) VALUES (?, ?, ?)",
+                (stock.meta.stock_ticker, stock.price, int(time()))
             )
 
         conn.commit()

@@ -37,10 +37,6 @@ if __name__ == "__main__":
 
     metas = load_companies()
 
-    stocks = []
-    for meta in metas:
-        stock = simulator.Stock(meta=meta, write_to_disk=True)
-        stocks.append(stock)
 
     conn = sqlite3.connect("../market.db")
     cur = conn.cursor()
@@ -51,9 +47,10 @@ if __name__ == "__main__":
 
     cur.execute("""
     CREATE TABLE IF NOT EXISTS market_data (
-        stock_name TEXT,
+        stock_ticker TEXT,
         price_cents INTEGER,
-        timestamp INTEGER
+        timestamp INTEGER,
+        FOREIGN KEY (stock_ticker) REFERENCES stocks_meta (stock_ticker)
     )
     """)
 
@@ -64,11 +61,23 @@ if __name__ == "__main__":
         biography TEXT
     )""")
 
+    stocks = []
+    for meta in metas:
+        stock = simulator.Stock(meta=meta, write_to_disk=True)
+        stocks.append(stock)
+
+        cur.execute("""
+        INSERT INTO stocks_meta (stock_ticker, stock_name, biography) VALUES (?, ?, ?)
+        """, (meta.stock_ticker, meta.stock_name, meta.biography))
+        conn.commit()
+    
+    conn.close()
+
     sched = scheduler.Scheduler()
 
     market = simulator.Market(stocks=stocks)
         
-    sim_task = scheduler.PeriodicTask(callback=market.simulate, interval=0.1)
+    sim_task = scheduler.PeriodicTask(callback=market.simulate, interval=30.0)
 
     sched.add_task(sim_task)
     # sched.add_task(event_task)
