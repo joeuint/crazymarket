@@ -9,9 +9,7 @@ import events
 import json
 import pathlib
 
-
-STAGNANT_MAX_CHANGE = 5
-STAGNANT_MIN_CHANGE = -5
+VOLATILITY_FACTOR = 5
 
 @dataclass
 class StockMeta:
@@ -33,9 +31,9 @@ class StockMeta:
     ipo: int
 
 class MarketTrend(enum.Enum):
-    BULL = (10, 40)
-    BEAR = (-40, -10)
-    STAGNANT = (-5, 5)
+    BULL = (10 * VOLATILITY_FACTOR, 40 * VOLATILITY_FACTOR)
+    BEAR = (-40 * VOLATILITY_FACTOR, -10 * VOLATILITY_FACTOR)
+    STAGNANT = (-5 * VOLATILITY_FACTOR, 5 * VOLATILITY_FACTOR)
 
 
 class Stock:
@@ -45,8 +43,8 @@ class Stock:
         self.ipo = meta.ipo
         self.meta = meta
         self.trend = MarketTrend.STAGNANT
-        self.surge_risk = 3  # percentage
-        self.crash_risk = 3  # percentage
+        self.surge_risk = 3
+        self.crash_risk = 3
 
         self.mutex = threading.Lock()
 
@@ -57,7 +55,7 @@ class Stock:
                 f.write(f"{self.price}\n")
 
     def determine_trend(self):
-        change_trend = random.randint(0, 5) == 0
+        change_trend = random.randint(0, 10) == 0
 
         if change_trend:
             self.trend = random.choice(list(MarketTrend))
@@ -105,9 +103,9 @@ class Stock:
         self.crash_risk = max(0, self.crash_risk)
 
         # determine if a correction happens
-        if random.randint(1, 100) <= self.crash_risk:
+        if random.randint(1, 800) <= self.crash_risk:
             self.crash_market()
-        elif random.randint(1, 100) <= self.surge_risk:
+        elif random.randint(1, 800) <= self.surge_risk:
             self.surge_market()
 
     def simulate(self):
@@ -164,5 +162,5 @@ class Market:
 
         conn.commit()
         conn.close()
-        
+
         # write market simulation to db

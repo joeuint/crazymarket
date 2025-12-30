@@ -20,8 +20,8 @@ def load_companies() -> list[simulator.StockMeta]:
     for file in files:
         if file.name == "company.schema.json":
             continue
-        
-        try: 
+
+        try:
             meta = simulator.StockMeta.from_json_file(file)
         except Exception as e:
             print(f"Error loading {file}: {e}")
@@ -70,14 +70,14 @@ if __name__ == "__main__":
         INSERT INTO stocks_meta (stock_ticker, stock_name, biography) VALUES (?, ?, ?)
         """, (meta.stock_ticker, meta.stock_name, meta.biography))
         conn.commit()
-    
+
     conn.close()
 
     sched = scheduler.Scheduler()
 
     market = simulator.Market(stocks=stocks)
-        
-    sim_task = scheduler.PeriodicTask(callback=market.simulate, interval=30.0)
+
+    sim_task = scheduler.PeriodicTask(callback=market.simulate, interval=1.0)
 
     sched.add_task(sim_task)
     # sched.add_task(event_task)
