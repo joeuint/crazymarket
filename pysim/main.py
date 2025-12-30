@@ -77,7 +77,7 @@ if __name__ == "__main__":
 
     market = simulator.Market(stocks=stocks)
 
-    sim_task = scheduler.PeriodicTask(callback=market.simulate, interval=1.0)
+    sim_task = scheduler.PeriodicTask(callback=market.simulate, interval=30.0)
 
     sched.add_task(sim_task)
     # sched.add_task(event_task)

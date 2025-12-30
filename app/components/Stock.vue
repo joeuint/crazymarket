@@ -12,15 +12,16 @@ const categories = {
     },
 };
 
-const price = reactive(await $fetch(`/api/market/${props.stock.stock_ticker}/priceHistory/3600`, {}));
+const price = reactive(await $fetch(`/api/market/${props.stock.stock_ticker}/priceHistory`, {}));
 
 const priceData = computed(() => {
-    return price.map((entry: { price_cents: number; timestamp: number }) => ({
-        date: entry.timestamp * 1000, // Convert seconds to milliseconds for Date constructor
-        price: entry.price_cents / 100,
-    })).reverse();
+    return price
+        .map((entry: { price_cents: number; timestamp: number }) => ({
+            date: entry.timestamp * 1000, // Convert seconds to milliseconds for Date constructor
+            price: entry.price_cents / 100,
+        }))
+        .reverse();
 });
-
 </script>
 
 <template>
@@ -43,7 +44,12 @@ const priceData = computed(() => {
             xLabel="Date"
             yLabel="Amount"
             :curveType="curveType"
-            :xFormatter="(i: number) => priceData[i] ? new Date(priceData[i].date).toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' }) : ''"
+            :xFormatter="
+                (i: number) =>
+                    priceData[i]
+                        ? new Date(priceData[i].date).toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' })
+                        : ''
+            "
         />
     </div>
 </template>

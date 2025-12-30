@@ -57,10 +57,12 @@ export const market = {
     getPriceHistory(ticker: string, lastTime: number = 86400): MarketDataEntry[] {
         const cutoffTimestamp = Math.floor(Date.now() / 1000) - lastTime;
 
-        const rows = db.prepare(
-            'SELECT stock_ticker, price_cents, timestamp FROM market_data WHERE stock_ticker = ? AND timestamp >= ? ORDER BY timestamp DESC',
-        ).all(ticker, cutoffTimestamp);
+        const rows = db
+            .prepare(
+                'SELECT stock_ticker, price_cents, timestamp FROM market_data WHERE stock_ticker = ? AND timestamp >= ? ORDER BY timestamp DESC',
+            )
+            .all(ticker, cutoffTimestamp);
 
         return rows.filter(this.isMarketDataEntry);
-    }
+    },
 };
