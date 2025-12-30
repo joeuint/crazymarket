@@ -1,18 +1,7 @@
 import Database from 'better-sqlite3';
+import type { MarketDataEntry, StockMetadata } from '@@/types/Stock';
 
 const db = new Database('market.db');
-
-export interface MarketDataEntry {
-    stock_ticker: string;
-    price_cents: number;
-    timestamp: number;
-}
-
-export interface StockMetadata {
-    stock_ticker: string;
-    stock_name: string;
-    biography: string;
-}
 
 export const market = {
     isMarketDataEntry(obj: any): obj is MarketDataEntry {
@@ -64,4 +53,14 @@ export const market = {
 
         return rows.filter(this.isStockMetadata);
     },
+
+    getPriceHistory(ticker: string, lastTime: number = 86400): MarketDataEntry[] {
+        const cutoffTimestamp = Math.floor(Date.now() / 1000) - lastTime;
+
+        const rows = db.prepare(
+            'SELECT stock_ticker, price_cents, timestamp FROM market_data WHERE stock_ticker = ? AND timestamp >= ? ORDER BY timestamp DESC',
+        ).all(ticker, cutoffTimestamp);
+
+        return rows.filter(this.isMarketDataEntry);
+    }
 };
