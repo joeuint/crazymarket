@@ -37,9 +37,13 @@ class MarketTrend(enum.Enum):
 
 
 class Stock:
-    def __init__(self, meta: StockMeta, *, write_to_disk: bool = False):
+    def __init__(self, meta: StockMeta, *, write_to_disk: bool = False, initial_price: int | None = None):
         self.name = meta.stock_name
-        self.price = meta.ipo
+        self.price = initial_price if initial_price is not None else meta.ipo
+
+        if initial_price is not None:
+            print(f"Initialized {self.name} with custom initial price of {self.price} cents.")
+
         self.ipo = meta.ipo
         self.meta = meta
         self.trend = MarketTrend.STAGNANT

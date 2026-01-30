@@ -42,8 +42,8 @@ if __name__ == "__main__":
     cur = conn.cursor()
 
     # Drop table if exists for clean testing
-    cur.execute("DROP TABLE IF EXISTS market_data")
-    cur.execute("DROP TABLE IF EXISTS stocks_meta")
+    # cur.execute("DROP TABLE IF EXISTS market_data")
+    # cur.execute("DROP TABLE IF EXISTS stocks_meta")
 
     cur.execute("""
     CREATE TABLE IF NOT EXISTS market_data (
@@ -63,13 +63,22 @@ if __name__ == "__main__":
 
     stocks = []
     for meta in metas:
-        stock = simulator.Stock(meta=meta, write_to_disk=True)
+        cur.execute("SELECT price_cents FROM market_data WHERE stock_ticker = ? ORDER BY timestamp DESC LIMIT 1", (meta.stock_ticker,))
+        row = cur.fetchone()
+        initial_price = row[0] if row else None
+
+        stock = simulator.Stock(meta=meta, write_to_disk=False, initial_price=initial_price)
         stocks.append(stock)
 
-        cur.execute("""
-        INSERT INTO stocks_meta (stock_ticker, stock_name, biography) VALUES (?, ?, ?)
-        """, (meta.stock_ticker, meta.stock_name, meta.biography))
-        conn.commit()
+        try:
+            cur.execute("""
+            INSERT INTO stocks_meta (stock_ticker, stock_name, biography) VALUES (?, ?, ?)
+            """, (meta.stock_ticker, meta.stock_name, meta.biography))
+            conn.commit()
+            
+            print(f"Inserted metadata for {meta.stock_ticker}")
+        except sqlite3.IntegrityError:
+            print(f"Metadata for {meta.stock_ticker} already exists. Skipping insertion.")
 
     conn.close()
 
@@ -77,7 +86,7 @@ if __name__ == "__main__":
 
     market = simulator.Market(stocks=stocks)
 
-    sim_task = scheduler.PeriodicTask(callback=market.simulate, interval=30.0)
+    sim_task = scheduler.PeriodicTask(callback=market.simulate, interval=10.0)
 
     sched.add_task(sim_task)
     # sched.add_task(event_task)
